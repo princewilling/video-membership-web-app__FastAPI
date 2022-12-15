@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+
+
+{% block content %}
+
+<div class='row'>
+    {# <div class='col-12 col-md-3'>
+        {% include 'videos/sidebar.html' %}
+
+    </div> #}
+
+    <div class='col-12 col-md-9'>
+        <h1>Videos</h1>
+
+        {% for object in object_list %}
+        <div class='border rounded p-3 mb-2'>
+        <li>
+            {# {% include 'videos/htmx/list-inline.html' %} #}
+            <a href="{{ object.path }}">
+            {% if not object.title %}{{ object.host_id }}{% else %}{{ object.title }}{% endif %}
+            </a>
+            {# {{ object.render()|safe }} #}
+        </li>
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+
+{% endblock %}
