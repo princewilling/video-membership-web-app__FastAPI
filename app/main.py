@@ -5,6 +5,7 @@ from starlette.middleware.authentication import AuthenticationMiddleware
 from starlette.authentication import requires
 from cassandra.cqlengine.management import sync_table
 from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 from pydantic import ValidationError
  
 from . import db, utils
@@ -23,8 +24,10 @@ from .watch_events.routers import router as watch_event_router
 
 BASE_DIR = pathlib.Path(__file__).resolve().parent
 TEMPLATE_DIR = BASE_DIR / "templates"  
+STATIC_DIR = BASE_DIR / "static"  
 
 app = FastAPI()
+app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 app.add_middleware(AuthenticationMiddleware, backend=JWTCookieBackend())
 app.include_router(video_router)
 app.include_router(watch_event_router)
@@ -34,6 +37,7 @@ templates = Jinja2Templates(directory=str(TEMPLATE_DIR))
 DB_SEESSION = None
 
 from .handlerz import * # noqa
+
 
 
 @app.on_event("startup")
@@ -111,4 +115,11 @@ def signup_post_view(request: Request,
         return render(request, "auth/signup.html", context=context, status_code=400)
     
     return redirect("/login", cookies=data)
-  
+
+@app.get("/index", response_class=HTMLResponse)
+def index_view(request: Request):
+    """
+    hello world
+    """
+    context = {}
+    return render(request, "index.html", context)
