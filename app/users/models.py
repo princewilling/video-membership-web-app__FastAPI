@@ -43,7 +43,7 @@ class User(Model):
             raise exceptions.InvalidEmailException(f"Invalid email: {msg}")
         obj = User(email=email)
         obj.set_password(password)
-        obj.password = password
+        # obj.password = password
         obj.save()
         return obj
     

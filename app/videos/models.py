@@ -8,6 +8,7 @@ from app.users.models import User
 from app.shortcuts import templates
 from .extractors import extract_video_id
 from .exceptions import InvalidYouTubeVideoURLException, VideoAlreadyAddedException
+from cassandra.cqlengine.query import (DoesNotExist, MultipleObjectsReturned)
 
 settings = get_settings()
   
@@ -27,7 +28,7 @@ class Video(Model):
         return f"Video(title={self.title}, host_id={self.host_id}, host_service={self.host_service})"
     
     def as_data(self):
-        return {f"{self.host_service}_id": self.host_id, "path":self.path}
+        return {f"{self.host_service}_id": self.host_id, "path":self.path, "title":self.title}
     
     def render(self):
         basename = self.host_service # youtube, vimeo
@@ -39,6 +40,33 @@ class Video(Model):
     @property
     def path(self): 
         return f"/videos/{self.host_id}"
+    
+    @staticmethod
+    def get_or_create(url, user_id=None, **kwargs):
+        host_id = extract_video_id(url)
+        obj = None
+        created = False
+        try:
+            obj = Video.objects.get(host_id=host_id)
+        except MultipleObjectsReturned:
+            q = Video.objects.allow_filtering().filter(host_id=host_id)
+            obj = q.first()
+        except DoesNotExist:
+            obj = Video.add_video(url, user_id=user_id, **kwargs)
+            created = True
+        except:
+            raise Exception("Invalid Request")
+        return obj, created
+    
+    def update_video_url(self, url, save=True):
+        host_id = extract_video_id(url)
+        if not host_id:
+            return None
+        self.url = url
+        self.host_id = host_id
+        if save:
+            self.save()
+        return url
     
     @staticmethod
     def add_video(url, user_id=None, **kwargs):

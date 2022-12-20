@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 
+
 {% block content %}
 
 <div class='row'>
@@ -9,11 +10,14 @@
 
     </div>
     <div class='col-12 col-md-9'>
-        <h1>Add Video</h1>
 
-{% include 'videos/htmx/create.html' %}
+<h1>Edit Video</h1>
 
+{% with video=object %}
+    {% include 'videos/htmx/edit.html' %}
+{% endwith %}
+</div>
 </div>
 
-</div>
+
 {% endblock %}

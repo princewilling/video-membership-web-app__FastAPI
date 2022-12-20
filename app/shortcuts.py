@@ -11,6 +11,10 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 settings = config.get_settings()
 templates = Jinja2Templates(directory=str(settings.templates_dir))
 
+
+def is_htmx(request:Request):
+    return request.headers.get("hx-request") == 'true'
+
 def get_object_or_404(KlassName, **kwargs):
     obj = None
     try:
