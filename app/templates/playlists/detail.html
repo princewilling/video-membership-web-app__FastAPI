@@ -22,7 +22,9 @@
                             class='btn btn-sm btn-outline-secondary mx-2'
                             hx-post='/playlists/{{ object.db_id }}/{{ video.host_id }}/delete/'
                             hx-target="#video-item-{{ loop.index }}"
-                            hx-vals='{"index": "{{ loop.index - 1 }}"}'>Remove</button>
+                            hx-vals='{"index": "{{ loop.index - 1 }}"}'>
+                            Remove
+                        </button>
                     
                     </li> 
                 {% endwith %}

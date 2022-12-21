@@ -129,3 +129,13 @@ def index_view(request: Request):
     """
     context = {}
     return render(request, "index.html", context)
+
+@app.get("/logout", response_class=HTMLResponse)
+def logout_get_view(request: Request):
+    if not request.user.is_authenticated:
+        return redirect('/login')
+    return render(request, "auth/logout.html", {})
+
+@app.post("/logout", response_class=HTMLResponse)
+def logout_post_view(request: Request):
+    return redirect("/login", remove_session=True)
