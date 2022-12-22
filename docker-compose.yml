@@ -11,9 +11,3 @@ services:
 
     env_file:
       - ./.env
- 
-    # environment:
-    #   - ASTRADB_KEYSPACE = video_membership_app
-    #   - ASTRADB_CLIENT_SECRET = ic.FYgel,NDtsQY962SUNbNLBhZx_B0hRxx+k3f,wRtKE_sFgh31mqG.52_hMrZZRvGon+2ML,ZBq3ZLT.Ed,FzNtRaYIJexOL1uz40IERLHnWZYFbc2NUX+v7,HA0_i
-    #   - ASTRADB_CLIENT_ID = bEZtNpMevKsYKOGLrBqZvmIL
-    #   - SECRET_KEY = 92bede2bc4bc7bebcc66dacc8c648e257f832b1eff68a6cb0174954d409491fe

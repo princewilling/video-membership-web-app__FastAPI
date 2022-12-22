@@ -10,3 +10,4 @@ pytest.ini
 Procfile
 nginx
 gunicorn.service
+docker-compose*.yml

@@ -1,5 +1,6 @@
 app/unencrypted/
 app/decrypted/
+app/ignored
 tmp/
 nbs/tmp/
 models/
