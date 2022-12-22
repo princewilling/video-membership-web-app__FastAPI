@@ -5,6 +5,7 @@ tmp/
 nbs/tmp/
 models/
 *.pkl
+*.env
 datasets/exports/*.json
 .DS_Store
 datasets/spam-classifier/
