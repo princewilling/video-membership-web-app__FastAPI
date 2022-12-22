@@ -6,8 +6,6 @@ from starlette.authentication import requires
 from cassandra.cqlengine.management import sync_table
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-from pydantic import ValidationError
-
  
 from . import db, utils
 from . shortcuts import render, redirect

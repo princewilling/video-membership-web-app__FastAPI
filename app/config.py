@@ -16,12 +16,13 @@ class Settings(BaseSettings):
     jwt_algorithm:str = Field(default='HS256')
     session_duration: int = Field(default=86400)
     
-    keyspace_test: str = Field(..., env='ASTRADB_KEYSPACE_TEST')
-    db_client_id_test: str = Field(..., env='ASTRADB_CLIENT_ID_TEST')
-    db_client_secret_test: str = Field(..., env='ASTRADB_CLIENT_SECRET_TEST')
      
+    # class Config:
+    #     env_file = '.env'
+        
     class Config:
-        env_file = '.env'
+        env_file = 'test.env'
+        env_file_encoding = 'utf-8'
          
          
 @lru_cache
