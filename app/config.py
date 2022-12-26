@@ -15,13 +15,16 @@ class Settings(BaseSettings):
     encryption_key:str = Field()
     jwt_algorithm:str = Field(default='HS256')
     session_duration: int = Field(default=86400)
+    algolia_index_name:str
+    algolia_app_id:str
+    algolia_api_key:str
     
      
     # class Config:
     #     env_file = '.env'
         
     class Config:
-        env_file = 'test_.env'
+        env_file = '.test.env'
         env_file_encoding = 'utf-8'
          
          
