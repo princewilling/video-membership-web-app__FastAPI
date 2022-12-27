@@ -8,6 +8,7 @@ from cassandra.cqlengine.management import sync_table, drop_table
 
 
 from app.playlists.models import Playlist
+from app.users import schemas
 from app.users.models import User
 from app.videos.models import Video
 from app.watch_events.models import WatchEvent
@@ -66,4 +67,17 @@ def setup(override_get_session):
 @pytest.fixture
 def client(setup):
     yield TestClient(app)
+    
+
+@pytest.fixture
+def test_user(client):
+    user_data={"email": "local@gmail.com",  "password": "1234", "password_confirm":"1234"}
+    
+    new_user = schemas.UserSignupSchema(**user_data)
+    assert new_user.email == user_data["email"]
+    res = client.post("/signup/", data=user_data)
+    
+    assert res.status_code == 200
+    new_user = (new_user.dict())
+    return new_user
     

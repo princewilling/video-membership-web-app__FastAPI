@@ -21,7 +21,7 @@ class UserLoginSchema(BaseModel):
         if user_obj is None:
             raise ValueError(err_msg)
         token = auth.login(user_obj)
-        return {"session_id": token}
+        return {"session_id": token, "user_id":user_obj.user_id}
 
 class UserSignupSchema(BaseModel):
     email: EmailStr

@@ -2,7 +2,7 @@ from app import config
 
 from cassandra.cqlengine.query import (DoesNotExist, MultipleObjectsReturned)
 
-from fastapi import Request
+from fastapi import Request, status
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
@@ -28,11 +28,11 @@ def get_object_or_404(KlassName, **kwargs):
     return obj
 
 def redirect(path, cookies:dict={}, remove_session=False):
-    response = RedirectResponse(path, status_code=302)
+    response = RedirectResponse(path, status_code=status.HTTP_302_FOUND)
     for k, v in cookies.items():
-        response.set_cookie(key=k, value=v, httponly=True)
+        response.set_cookie(key=k, value=v, httponly=False)
     if remove_session:
-        response.set_cookie(key='session_ended', value=1, httponly=True)
+        response.set_cookie(key='session_ended', value=1, httponly=False)
         response.delete_cookie('session_id')
     return response
 
@@ -46,7 +46,6 @@ def render(request, template_name, context, status_code:int =200, cookies:dict={
     #set http only cookies
     if len(cookies.keys()) > 0:
         for k, v in cookies.items():
-            response.set_cookie(key=k, value=v, httponly=True)
+            response.set_cookie(key=k, value=v, httponly=False)
     
     return response
-    #return templates.TemplateResponse(template_name, ctx, status_code=status_code)
