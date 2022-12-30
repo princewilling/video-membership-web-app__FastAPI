@@ -36,7 +36,7 @@ def redirect(path, cookies:dict={}, remove_session=False):
         response.delete_cookie('session_id')
     return response
 
-def render(request, template_name, context, status_code:int =200, cookies:dict={}):
+def render(request, template_name, context, status_code:int = 200, cookies:dict={}):
     ctx = context.copy()
     ctx.update({"request":request})
     temp = templates.get_template(template_name)

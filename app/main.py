@@ -5,10 +5,10 @@ from fastapi import FastAPI, Request, Form
 from starlette.middleware.authentication import AuthenticationMiddleware
 from cassandra.cqlengine.management import sync_table
 from fastapi.templating import Jinja2Templates
-from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
 
-from app.indexing.client import search_index, update_index 
+from .indexing.client import search_index, update_index 
  
 from . import db, utils
 from . shortcuts import render, redirect
@@ -29,7 +29,7 @@ from .playlists.models import Playlist
 
 BASE_DIR = pathlib.Path(__file__).resolve().parent
 TEMPLATE_DIR = BASE_DIR / "templates"  
-STATIC_DIR = BASE_DIR / "static"  
+#STATIC_DIR = BASE_DIR / "static"  
 
 app = FastAPI()
 
@@ -43,7 +43,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
+#app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 app.add_middleware(AuthenticationMiddleware, backend=JWTCookieBackend())
 app.include_router(video_router)
 app.include_router(watch_event_router)
@@ -169,3 +169,6 @@ def search_detail_view(request:Request, q:Optional[str] = None):
             "num_hits": num_hits
         }
     return render(request, "search/detail.html", context)
+
+if __name__ == '__main__':
+    uvicorn.run(app, host="0.0.0.0", port="5000")

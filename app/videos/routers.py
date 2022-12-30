@@ -1,7 +1,3 @@
-# import uuid
-# from typing import Optional
-# from starlette.exceptions import HTTPException
-
 from typing import Optional
 import uuid
 from fastapi import APIRouter, HTTPException, Request, Form, Depends
@@ -29,10 +25,6 @@ def video_create_view(request: Request,  is_htmx=Depends(is_htmx),
         return render(request, "videos/htmx/create.html", {})
     return render(request, "videos/create.html", {})
 
-# @router.get("/create", response_class=HTMLResponse)
-# @login_required
-# def video_create_view(request: Request):
-#     return render(request, "videos/create.html", {})
 
 @router.post("/create", response_class=HTMLResponse)
 @login_required
@@ -66,27 +58,6 @@ def video_create_post_view(request: Request, is_htmx=Depends(is_htmx), title: st
     if len(errors) > 0:
         return render(request, "videos/create.html", context, status_code=400)
     return redirect(redirect_path)
-
-# @router.post("/create", response_class=HTMLResponse)
-# @login_required
-# def video_create_post_view(request: Request, url: str = Form(...), title: str = Form(...)):
-    
-#     raw_data = {
-#         "title":title,
-#         "url":url,
-#         "user_id": request.user.username 
-        
-#     }
-#     data, errors = utils.valid_schema_data_or_error(raw_data, VidoeCreateSchema)
-#     context = {
-#         "data": data,
-#         "errors": errors,
-#         "url": url,
-#     }
-#     if len(errors) > 0:
-#         return render(request, "videos/create.html", context, status_code=400)
-#     redirect_path = data.get('path') or "/videos/create" 
-#     return redirect(redirect_path)
 
 
 @router.get("/", response_class=HTMLResponse)
@@ -125,13 +96,8 @@ def video_edit_view(request: Request, host_id: str):
 
 @router.post("/{host_id}/edit", response_class=HTMLResponse)
 @login_required
-def video_edit_post_view(
-        request: Request,
-          host_id: str, 
-        is_htmx=Depends(is_htmx), 
-        
-        title: str=Form(...), 
-        url: str = Form(...)):
+def video_edit_post_view(request: Request, host_id: str, is_htmx=Depends(is_htmx), 
+                         title: str=Form(...), url: str = Form(...)):
     raw_data = {
         "title": title,
         "url": url,
@@ -152,10 +118,7 @@ def video_edit_post_view(
 
 @router.get("/{host_id}/hx-edit", response_class=HTMLResponse)
 @login_required
-def video_hx_edit_view(
-    request: Request, 
-    host_id: str, 
-    is_htmx=Depends(is_htmx)):
+def video_hx_edit_view(request: Request, host_id: str, is_htmx=Depends(is_htmx)):
     if not is_htmx:
         raise HTTPException(status_code=400)
     obj = None
@@ -175,13 +138,9 @@ def video_hx_edit_view(
 
 @router.post("/{host_id}/hx-edit", response_class=HTMLResponse)
 @login_required
-def video_hx_edit_post_view(
-        request: Request,
-        host_id: str, 
-        is_htmx=Depends(is_htmx), 
-        title: str=Form(...), 
-        url: str = Form(...),
-        delete: Optional[bool] = Form(default=False)):
+def video_hx_edit_post_view(request: Request, host_id: str, is_htmx=Depends(is_htmx), 
+                            title: str=Form(...), url: str = Form(...), 
+                            delete: Optional[bool] = Form(default=False)):
     if not is_htmx:
         raise HTTPException(status_code=400)
     obj = None
@@ -191,10 +150,10 @@ def video_hx_edit_post_view(
     except:
         not_found = True
     if not_found:
-        return HTMLResponse("Not found, please try again.")
+        return HTMLResponse("Not found, please try again.", status_code=404)
     if delete:
         obj.delete()
-        return HTMLResponse('Item Deleted')
+        return HTMLResponse('Item Deleted', status_code=204)
     raw_data = {
         "title": title,
         "url": url,
