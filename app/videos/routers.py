@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Optional
 import uuid
 from fastapi import APIRouter, HTTPException, Request, Form, Depends, status
@@ -15,6 +16,23 @@ from .schemas import (VidoeCreateSchema, VideoEditSchema)
 router = APIRouter(
     prefix='/videos'
 )
+
+@router.get("/", response_class=HTMLResponse)
+def video_list_view(request: Request):
+    q = Video.objects.all()
+    context = {
+        "object_list": q
+    }
+    return render(request, "videos/video-home.html", context)
+
+@router.get("/user_videos", response_class=HTMLResponse)
+@login_required
+def video_list_view_per_user(request: Request):
+    q = Video.objects.filter(user_id=request.user.username)
+    context = {
+        "object_list": q
+    }
+    return render(request, "videos/list.html", context)
 
 @router.get("/create", response_class=HTMLResponse)
 @login_required
@@ -58,15 +76,6 @@ def video_create_post_view(request: Request, is_htmx=Depends(is_htmx), title: st
     if len(errors) > 0:
         return render(request, "videos/create.html", context, status_code=400)
     return redirect(redirect_path)
-
-
-@router.get("/", response_class=HTMLResponse)
-def video_list_view(request: Request):
-    q = Video.objects.all().limit(100)
-    context = {
-        "object_list": q
-    }
-    return render(request, "videos/list.html", context)
 
 @router.get("/{host_id}", response_class=HTMLResponse)
 def video_detail_view(request: Request, host_id:str):

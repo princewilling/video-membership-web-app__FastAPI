@@ -24,6 +24,9 @@
               <li><a class="dropdown-item" href="/login">Login</a></li>
               <li><a class="dropdown-item" href="/signup">Sign up</a></li>
              {% else %}
+              <li><a class="dropdown-item" href="/account">My Profile</a></li>
+              <li><a class="dropdown-item" href="/videos/user_videos">My Videos</a></li>
+              <li><a class="dropdown-item" href="/playlists/user_playlist">My Playlists</a></li>
               <li><a class="dropdown-item" href="/logout">Logout</a></li>
               {% endif %}
             </ul>
@@ -32,4 +35,4 @@
        {% include 'search/search_form.html' %}
       </div>
     </div>
-  </nav>
+</nav>

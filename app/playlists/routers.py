@@ -51,16 +51,24 @@ def playlist_create_post_view(request: Request, title: str=Form(...)):
     return redirect(redirect_path)
 
 
+@router.get("/user_playlist", response_class=HTMLResponse)
+@login_required
+def playlist_list_view_per_user(request: Request):
+    q = Playlist.objects.allow_filtering().filter(user_id=request.user.username)
+    context = {
+        "object_list": q
+    }
+    return render(request, "playlists/list.html", context)
+
+
 @router.get("/", response_class=HTMLResponse)
 def playlist_list_view(request: Request):
     q = Playlist.objects.all().limit(100)
     context = {
         "object_list": q
     }
-    return render(request, "playlists/list.html", context)
+    return render(request, "playlists/playlist-home.html", context)
 
-# host_id='playlist-1'
-# f"{host_id} is cool"
 
 @router.get("/{db_id}", response_class=HTMLResponse)
 def playlist_detail_view(request: Request, db_id: uuid.UUID):

@@ -29,7 +29,7 @@ from .playlists.models import Playlist
 
 BASE_DIR = pathlib.Path(__file__).resolve().parent
 TEMPLATE_DIR = BASE_DIR / "templates"  
-#STATIC_DIR = BASE_DIR / "static"  
+# STATIC_DIR = BASE_DIR / "static"  
 
 app = FastAPI()
 
@@ -43,7 +43,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-#app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
+# app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 app.add_middleware(AuthenticationMiddleware, backend=JWTCookieBackend())
 app.include_router(video_router)
 app.include_router(watch_event_router)
@@ -69,10 +69,11 @@ def on_startup():
 
 @app.get("/", response_class=HTMLResponse)
 def homepage(request: Request):
-    if request.user.is_authenticated:
-        return render(request, "dashboard.html", {}, status_code=200)
-    
-    return render(request, "home.html", {})
+    q = Video.objects.all().limit(100)
+    context = {
+        "object_list": q
+    }
+    return render(request, "home.html", context=context)
 
 @app.get("/account", response_class=HTMLResponse)
 @login_required

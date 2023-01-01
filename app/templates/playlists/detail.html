@@ -4,12 +4,12 @@
 
 {% block content %}
 <div class='row'>
+    {% if request.user.username == object.userID %}
     <div class='col-12 col-md-3'>
-        {% include 'playlists/sidebar.html' %}
-
+    {% include 'playlists/sidebar.html' %}
     </div>
+    {% endif %}
     <div class='col-12 col-md-9'>
-
         {% if object.title %}<h1>{{ object.title }}</h1>{% endif %}
         <div id='video-container'>
             <ul class='list-group mb-3'>
@@ -18,6 +18,7 @@
                 <li class="list-group-item" id='video-item-{{ loop.index }}'>
                 
                     {% include 'videos/htmx/link.html' %}
+                    {% if request.user.username == object.userID %}
                         <button 
                             class='btn btn-sm btn-outline-secondary mx-2'
                             hx-post='/playlists/{{ object.db_id }}/{{ video.host_id }}/delete/'
@@ -25,22 +26,23 @@
                             hx-vals='{"index": "{{ loop.index - 1 }}"}'>
                             Remove
                         </button>
-                    
+                    {% endif %}
                     </li> 
                 {% endwith %}
             {% endfor %}
         </ul>
         </div>
 
-
+        {% if request.user.username == object.userID %}
         <button 
             class='btn btn-outline-secondary'    
-        hx-get='/playlists/{{ object.db_id }}/add-video'
+            hx-get='/playlists/{{ object.db_id }}/add-video'
             hx-trigger='click'
             hx-target='#video-container'
             hx-swap='beforeend'>
             Add Video Form
         </button>
+        {% endif %}
 </div>
 </div>
 

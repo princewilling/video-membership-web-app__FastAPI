@@ -12,7 +12,7 @@ settings = config.get_settings()
 class Playlist(Model):
     __keyspace__ = settings.keyspace
     db_id = columns.UUID(primary_key=True, default=uuid.uuid1)
-    user_id = columns.UUID()
+    user_id = columns.UUID(primary_key=True)
     updated = columns.DateTime(default=datetime.utcnow())
     host_ids = columns.List(value_type=columns.Text)
     title = columns.Text()
@@ -20,6 +20,10 @@ class Playlist(Model):
     @property
     def path(self):
         return f"/playlists/{self.db_id}"
+    
+    @property
+    def userID(self): 
+        return f"{str(self.user_id)}"
     
     def add_host_ids(self, host_ids=[], replace_all=False):
         if not isinstance(host_ids, list):

@@ -1,4 +1,6 @@
+from datetime import datetime
 import uuid
+import pytz
 from app.config import get_settings
 from app.users.exceptions import InvalidUserIDException
 from cassandra.cqlengine import columns
@@ -16,10 +18,12 @@ class Video(Model):
     __keyspace__ = settings.keyspace
     host_id = columns.Text(primary_key=True) # YouTube, Vimeo
     db_id = columns.UUID(primary_key=True, default=uuid.uuid1)
+    created_at = columns.DateTime(primary_key=True, default=datetime.now())
     host_service = columns.Text(default='youtube')
     title = columns.Text() #source
     url = columns.Text() #source
-    user_id = columns.UUID()
+    user_id = columns.UUID(index=True)
+
     
     def __str__(self) -> str:
         return self.__repr__()

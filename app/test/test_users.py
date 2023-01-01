@@ -13,6 +13,7 @@ def test_root(client):
     
     assert res.encoding == "utf-8"
     assert "Welcome to Video Membership" in res.text
+    assert "Recent Videos" in res.text
     assert res.status_code == 200
     
 def test_create_user(client):

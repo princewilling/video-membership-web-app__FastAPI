@@ -11,6 +11,16 @@ def test_get_all_videos(client, test_videos):
     assert ls[1].title in res.text
     assert ls[2].title in res.text
     assert res.status_code == 200
+
+# def test_get_all_videos(authorized_client, test_videos):
+#     res = authorized_client.get("/videos/user_videos/")
+#     ls = list(test_videos)
+#     print(ls)
+    
+#     # assert ls[0].title in res.text
+#     # assert ls[1].title in res.text
+#     # assert ls[2].title in res.text
+#     assert res.status_code == 200
     
 
 def test_get_one_video(client, test_videos):
