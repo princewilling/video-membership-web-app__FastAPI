@@ -12,15 +12,14 @@ def test_get_all_videos(client, test_videos):
     assert ls[2].title in res.text
     assert res.status_code == 200
 
-# def test_get_all_videos(authorized_client, test_videos):
-#     res = authorized_client.get("/videos/user_videos/")
-#     ls = list(test_videos)
-#     print(ls)
+def test_get_all_videos_per_user(authorized_client, test_videos):
+    res = authorized_client.get("/videos/user_videos/")
+    ls = list(test_videos)
     
-#     # assert ls[0].title in res.text
-#     # assert ls[1].title in res.text
-#     # assert ls[2].title in res.text
-#     assert res.status_code == 200
+    assert ls[0].title in res.text
+    assert ls[1].title in res.text
+    assert ls[2].title not in res.text
+    assert res.status_code == 200
     
 
 def test_get_one_video(client, test_videos):
@@ -140,6 +139,9 @@ def test_update_other_user_video(authorized_client, test_videos):
         "title": f"{test_videos[2].title},  Updated!!!", 
         "url": f"{test_videos[2].url}",
         "delete": True
+
+
+
         }
     res = authorized_client.post(f"/videos/{test_videos[2].host_id}/hx-edit", data=data)
     
