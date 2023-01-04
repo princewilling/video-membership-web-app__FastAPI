@@ -11,6 +11,7 @@ from cassandra.cqlengine.management import sync_table, drop_table
 
 
 from app.playlists.models import Playlist
+from app.playlists.schemas import PlaylistCreateSchema
 from app.users.auth import login
 from app.users.models import User
 from app.users.schemas import UserSignupSchema
@@ -144,5 +145,44 @@ def test_videos(test_user, test_user2):
     videos = Video.objects.all()
     assert len(videos) == len(videos_data)
     return videos
+
+@pytest.fixture
+def test_playlists(test_user, test_user2):
+    _, test_user = test_user 
+    playlists_data = [{
+        "title": "MongoDB",
+        "user_id": test_user.user_id
+    }, {
+        "title": "PostgresQL",
+        "user_id": test_user2.user_id
+    }, {
+        "title": "Apache Cassandra",
+        "user_id": test_user2.user_id
+    }]
+
+    def create_playlist_schema(playlist):
+        obj = PlaylistCreateSchema(**playlist)
+        obj = Playlist.objects.create(title=obj.title, user_id=obj.user_id)
+        return obj
+        
+    playlist_map = map(create_playlist_schema, playlists_data)
+    playlists = list(playlist_map)
+
+    playlists = Playlist.objects.all()
+    assert len(playlists) == len(playlists_data)
+    return playlists
+
+
+@pytest.fixture
+def test_add_video_to_playlist_be_removed(authorized_client, test_playlists):
+    authorized_client.headers = {**authorized_client.headers, "hx-request": "true"}
+    data = {"title": "BASH scripting will change your life", "url": "https://www.youtube.com/watch?v=7qd5sqazD7k"}
+    
+    res = authorized_client.post(f"/playlists/{test_playlists[2].db_id}/add-video/", data=data)
+    obj = Playlist.objects.all()[2]
+    
+    obj = obj.host_ids
+    return obj[0]
+    
 
     

@@ -148,11 +148,11 @@ def playlist_remove_video_item_view(
     try:
         obj = get_object_or_404(Playlist, db_id=db_id)
     except:
-        return HTMLResponse("Error. Please reload the page.")
+        return HTMLResponse("Error. Please reload the page.", status_code=404)
     if not request.user.is_authenticated:
-        return HTMLResponse("Please login and continue")
+        return HTMLResponse("Please login and continue", status_code=401)
     if isinstance(index, int):
         host_ids = obj.host_ids
         host_ids.pop(index)
         obj.add_host_ids(host_ids=host_ids, replace_all=True)
-    return HTMLResponse("Deleted")
+    return HTMLResponse("Deleted", status_code=204)

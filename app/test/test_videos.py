@@ -22,14 +22,14 @@ def test_get_all_videos_per_user(authorized_client, test_videos):
     assert res.status_code == 200
     
 
-def test_get_one_video(client, test_videos):
+def test_get_video_detail(client, test_videos):
     res = client.get(f"/videos/{test_videos[0].host_id}")
     
     assert test_videos[0].title in res.text
     assert test_videos[0].host_id in res.text
     assert res.status_code == 200
 
-def test_get_one_video_not_exist(client):
+def test_get__non_existing_video_detail(client):
     res = client.get(f"/videos/89665643234")
     
     assert "404 Error. Page Not Found" in res.text
@@ -48,6 +48,18 @@ def test_create_videos(authorized_client, test_user2, title, url):
     assert obj.host_service in url
     assert obj.host_id in url
     assert obj.user_id == test_user2.user_id
+    assert res.status_code == 200
+    
+
+@pytest.mark.parametrize("title, url", [
+     ("System Design: How to store passwords in the database?", "https://www.youtube.com/watch?v=zt8Cocdy15c"),
+     ("BASH scripting will change your life", "https://www.youtube.com/watch?v=7qd5sqazD7k"),
+])
+def test_create_videos_unauthorized_user(client, test_videos, title, url):
+    res = client.post("/videos/create/", data={"title": title, "url": url})
+    
+    assert len(test_videos) == len(Video.objects.all())
+    assert "Do you need an account?" in res.text
     assert res.status_code == 200
 
 def test_create_video_no_title_no_url(authorized_client, test_user2):

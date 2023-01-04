@@ -18,7 +18,7 @@ class Video(Model):
     __keyspace__ = settings.keyspace
     host_id = columns.Text(primary_key=True) # YouTube, Vimeo
     db_id = columns.UUID(primary_key=True, default=uuid.uuid1)
-    created_at = columns.DateTime(primary_key=True, default=datetime.now())
+    created_at = columns.DateTime(primary_key=True, default=datetime.utcnow())
     host_service = columns.Text(default='youtube')
     title = columns.Text() #source
     url = columns.Text() #source
