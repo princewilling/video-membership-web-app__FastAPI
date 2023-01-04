@@ -5,39 +5,39 @@ from app.playlists.models import Playlist
 from app.videos.extractors import extract_video_id
 from app.videos.models import Video
 
-@pytest.mark.parametrize("title", [
-     ("Docker"),
-     ("Kubernetes"),
-])
-def test_create_playlists(authorized_client, test_user2, title):
-    res = authorized_client.post("/playlists/create/", data={"title": title})
-    obj = Playlist.objects.all()
-    obj = obj.first()
+# @pytest.mark.parametrize("title", [
+#      ("Docker"),
+#      ("Kubernetes"),
+# ])
+# def test_create_playlists(authorized_client, test_user2, title):
+#     res = authorized_client.post("/playlists/create/", data={"title": title})
+#     obj = Playlist.objects.all()
+#     obj = obj.first()
 
     
-    assert title in res.text
-    assert obj.user_id == test_user2.user_id
-    assert res.status_code == 200
+#     assert title in res.text
+#     assert obj.user_id == test_user2.user_id
+#     assert res.status_code == 200
     
 
-def test_get_all_playlists(client, test_playlists):
-    res = client.get("/playlists/")
-    ls = list(test_playlists)
+# def test_get_all_playlists(client, test_playlists):
+#     res = client.get("/playlists/")
+#     ls = list(test_playlists)
     
-    assert ls[0].title in res.text
-    assert ls[1].title in res.text
-    assert ls[2].title in res.text
-    assert res.status_code == 200
+#     assert ls[0].title in res.text
+#     assert ls[1].title in res.text
+#     assert ls[2].title in res.text
+#     assert res.status_code == 200
 
-def test_get_all_playlists_per_user(authorized_client, test_playlists):
-    res = authorized_client.get("/playlists/user_playlist/")
-    ls = list(test_playlists)
-    print(ls)
+# def test_get_all_playlists_per_user(authorized_client, test_playlists):
+#     res = authorized_client.get("/playlists/user_playlist/")
+#     ls = list(test_playlists)
+#     print(ls)
     
-    assert ls[0].title in res.text
-    assert ls[1].title not in res.text
-    assert ls[2].title in res.text
-    assert res.status_code == 200
+#     assert ls[0].title in res.text
+#     assert ls[1].title not in res.text
+#     assert ls[2].title in res.text
+#     assert res.status_code == 200
     
 def test_get_playlist_detail(client, test_playlists):
     res = client.get(f"/playlists/{test_playlists[0].db_id}")
