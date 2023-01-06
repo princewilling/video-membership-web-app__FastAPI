@@ -1,4 +1,30 @@
 import pytest
+from app.watch_events.models import WatchEvent
+from app.watch_events.schemas import WatchEventSchema
+
+def test_watchevent_uncomplete(authorized_client, test_videos, test_user2):
+    data = {"host_id": test_videos[0].host_id, "start_time": 0.0, "end_time": 1.50, "duration":10.58 , "complete": False}
+    res = authorized_client.post("/api/events/watch", json=data)
+
+    created_event = WatchEventSchema(**res.json())
+    assert created_event.host_id == data["host_id"]
+    assert created_event.complete == data["complete"]
+    
+    resume_time = WatchEvent.get_resume_time(test_videos[0].host_id, test_user2.user_id)
+    assert resume_time == data["end_time"]
+    
+    
+def test_create_watchevent_complete(authorized_client, test_videos, test_user2):
+    data = {"host_id": test_videos[0].host_id, "start_time": 05.10, "end_time": 10.50, "duration":10.58 , "complete": True}
+    res = authorized_client.post("/api/events/watch", json=data)
+
+    created_event = WatchEventSchema(**res.json())
+    assert created_event.host_id == data["host_id"]
+    assert created_event.complete == data["complete"]
+    
+    resume_time = WatchEvent.get_resume_time(test_videos[0].host_id, test_user2.user_id)
+    assert resume_time == 0.0
+
 
 """['__class__', '__delattr__', '__dict__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__',
 '__getstate__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__le__', '__lt__', '__module__', '__ne__',
