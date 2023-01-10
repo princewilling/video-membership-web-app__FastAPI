@@ -33,7 +33,7 @@ jobs:
       - name: update pip
         run: python -m pip install --upgrade pip
 
-      -name: decrypt connection bundle
+      - name: decrypt connection bundle
         run: python -m pypr pipelines/decrypt
 
       - name: install all dependencies
