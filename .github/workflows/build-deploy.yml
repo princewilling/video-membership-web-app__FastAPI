@@ -37,4 +37,4 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: decrypt connection bundle
-        run: python -m pypr pipelines/decrypt
+        run: python -m pypyr pipelines/decrypt
